@@ -1,13 +1,12 @@
 import { NextFunction, Request, Response } from "express"
+import ExpressMiddleware from "../types/controllers/ExpressMiddleware"
 import ExtendedRequest from "../types/controllers/ExtendedRequest"
 import errorHandlers from "../utils/error/expressErrors"
 
 
-type expressMiddleware = (req: ExtendedRequest, res: Response, next: NextFunction) => Promise<void>
-
 export default class Auth {
 
-    public static authenticate(): expressMiddleware {
+    public static authenticate(): ExpressMiddleware {
         return async (req: ExtendedRequest, res: Response, next: NextFunction): Promise<void> => {
             try {
                 const userRef = req.headers["userref"]?.toString()

@@ -13,9 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Posts_1 = __importDefault(require("../models/Posts"));
-//class being used as the service layer for the playist controller
-class PlaylistService {
-    //function handles getting a specific platlist's videos list
+//class being used as the service layer for the posts controller
+class PostsService {
+    //function handles creating a new post under a specific user
     static createPost(postObject) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -27,7 +27,7 @@ class PlaylistService {
             }
         });
     }
-    //function handles getting a specific platlist's videos list
+    //function handles getting posts from DB - integrated with basic pagination 
     static getPosts(limit, skip) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -35,58 +35,16 @@ class PlaylistService {
                 return posts;
             }
             catch (e) {
+                console.log(e);
                 throw ("Unable to get posts");
             }
         });
     }
-    //function handles getting a specific platlist's videos list
+    //function handles fetching a distinct posts creators count
     static getPostsCount() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const postsStatistics = yield this.model.aggregate([
-                    {
-                        $group: {
-                            _id: "$creator",
-                            count: { $sum: 1 }
-                        }
-                    },
-                    {
-                        $match: {
-                            count: { $gte: 1 }
-                        }
-                    },
-                    // {$sort: {"$count": 1}}
-                ]);
-                return postsStatistics;
-            }
-            catch (e) {
-                throw (e);
-            }
-        });
-    }
-    //function handles getting a specific platlist's videos list
-    static getPostsStatistics() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const postsStatistics = yield this.model.aggregate([
-                    {
-                        $group: {
-                            _id: "$creator",
-                            count: { $sum: 1 }
-                        }
-                    },
-                    {
-                        $match: {
-                            count: { $gte: 1 }
-                        }
-                    },
-                    {
-                        $sort: { "count": -1 }
-                    },
-                    {
-                        $limit: 10
-                    }
-                ]);
+                const postsStatistics = yield this.model.countDocuments({});
                 return postsStatistics;
             }
             catch (e) {
@@ -95,5 +53,5 @@ class PlaylistService {
         });
     }
 }
-exports.default = PlaylistService;
-PlaylistService.model = Posts_1.default;
+exports.default = PostsService;
+PostsService.model = Posts_1.default;

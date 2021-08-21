@@ -3,12 +3,12 @@ import config from "../config";
 import { model, Model, Schema, Document } from "mongoose";
 import PostsModel, { postsSchema } from "../models/Posts";
 
-//class being used as the service layer for the playist controller
-export default class PlaylistService {
+//class being used as the service layer for the posts controller
+export default class PostsService {
 
     static model: Model<Document<any, any, any>, any, any> = PostsModel;
 
-    //function handles getting a specific platlist's videos list
+    //function handles creating a new post under a specific user
     public static async createPost(postObject: { [key: string]: any }): Promise<ObjType> {
         try {
             const post = new this.model(postObject)
@@ -18,34 +18,21 @@ export default class PlaylistService {
         }
     }
 
-    //function handles getting a specific platlist's videos list
-    public static async getPosts(limit: number | string, skip: number | string): Promise<any[]> {
+    //function handles getting posts from DB - integrated with basic pagination 
+    public static async getPosts(limit: number , skip: number ): Promise<any[]> {
         try {
             const posts = await this.model.find({}).skip(skip).limit(limit).sort({ createdAt: 1 })
             return posts
         } catch (e) {
+            console.log(e)
             throw ("Unable to get posts")
         }
     }
 
-    //function handles getting a specific platlist's videos list
+    //function handles fetching a distinct posts creators count
     public static async getPostsCount(): Promise<any[]> {
         try {
-            const postsStatistics = await this.model.aggregate([
-                {
-                    $group: {
-                        _id: "$creator",
-                        count: { $sum: 1 }
-                    }
-                },
-                {
-                    $match: {
-                        count: { $gte: 1 }
-                    }
-                },
-                // {$sort: {"$count": 1}}
-
-            ])
+            const postsStatistics = await this.model.countDocuments({})
 
             return postsStatistics
         } catch (e) {
@@ -53,35 +40,6 @@ export default class PlaylistService {
         }
     }
 
-    //function handles getting a specific platlist's videos list
-    public static async getPostsStatistics(): Promise<any[]> {
-        try {
-            const postsStatistics = await this.model.aggregate([
-                {
-                    $group: {
-                        _id: "$creator",
-                        count: { $sum: 1 }
-                    }
-                },
-                {
-                    $match: {
-                        count: { $gte: 1 }
-                    }
-                },
-                {
-                    $sort: { "count": -1 }
-                },
-                {
-                    $limit: 10
-                }
-
-            ])
-
-            return postsStatistics
-        } catch (e) {
-            throw (e)
-        }
-    }
 
 
 }

@@ -16,15 +16,15 @@ const express_1 = __importDefault(require("express"));
 const chalk_1 = __importDefault(require("chalk"));
 const cors_1 = __importDefault(require("cors"));
 const posts_1 = __importDefault(require("../../routers/posts"));
+const statistics_1 = __importDefault(require("../../routers/statistics"));
 require("../DB/dbConnect");
 exports.default = (expressPackage, port) => __awaiter(void 0, void 0, void 0, function* () {
     const app = expressPackage();
     process.env.NODE_ENV === "development" ? app.use(cors_1.default({ origin: "http://localhost:3000" })) : null;
     app.use(express_1.default.json());
     app.use(posts_1.default.endpoint, posts_1.default.router);
+    app.use(statistics_1.default.endpoint, statistics_1.default.router);
     app.listen(port, () => {
         console.log(chalk_1.default.green(`Running on port ${process.env.PORT || 8080}`));
     });
 });
-// const user = new User({})
-// user.save().then(res => console.log(res)).catch(err => console.log(err))

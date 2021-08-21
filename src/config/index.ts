@@ -1,5 +1,3 @@
-import path from "path"
-
 import dotenv from "dotenv"
 import Config from "../types/config";
 

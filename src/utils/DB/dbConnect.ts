@@ -5,7 +5,9 @@ import config from "../../config"
 mongoose
     .connect(config.db.connection_string, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+        useCreateIndex: true
     }
     )
     .then((res: any) => console.log("connected"))

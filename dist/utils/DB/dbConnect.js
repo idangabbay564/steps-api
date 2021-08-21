@@ -8,7 +8,9 @@ const config_1 = __importDefault(require("../../config"));
 mongoose_1.default
     .connect(config_1.default.db.connection_string, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true
 })
     .then((res) => console.log("connected"))
     .catch((err) => console.log(err));

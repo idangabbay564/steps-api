@@ -15,17 +15,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const Auth_1 = __importDefault(require("../auth/Auth"));
 const PostsService_1 = __importDefault(require("../service/PostsService"));
+const StatisticsService_1 = __importDefault(require("../service/StatisticsService"));
 const Endpoints_1 = __importDefault(require("../types/controllers/Endpoints"));
+const RuntimeFunctions_1 = __importDefault(require("../types/models/RuntimeFunctions"));
 const expressErrors_1 = __importDefault(require("../utils/error/expressErrors"));
+//create a new express router instance
 const router = express_1.Router();
-//Endpoint for fetching a specific playlist's information and details
+//Endpoint for creating a new post
+//using the authenticate method inside the Auth class to stimulate user authentication
 router.post("/", Auth_1.default.authenticate(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const postObject = req.body;
         if (!postObject)
             throw ("must provide a post object");
         postObject.creator = req.userRef;
+        const initialTime = Date.now();
         const post = yield PostsService_1.default.createPost(postObject);
+        const runTime = Date.now() - initialTime;
+        yield StatisticsService_1.default.insertRuntimeResult(RuntimeFunctions_1.default.CREATE_POST, runTime);
         res.send({ post });
     }
     catch (e) {
@@ -34,26 +41,19 @@ router.post("/", Auth_1.default.authenticate(), (req, res) => __awaiter(void 0, 
         expressErrors_1.default.userError(res, e);
     }
 }));
-//Endpoint for fetching a specific playlist's information and details
+//Endpoint for fetching posts objects, with basic pagination 
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let limit = req.query.limit || 10;
         let skip = req.query.skip || 0;
-        skip = skip.toString();
-        limit = limit.toString();
+        skip = parseInt(skip.toString());
+        limit = parseInt(limit.toString());
+        const initialTime = Date.now();
         const posts = yield PostsService_1.default.getPosts(limit, skip);
-        res.send({ posts });
-    }
-    catch (e) {
-        // any error that is thrown and not being handled earlier in the code will be send as an internal error to the client
-        expressErrors_1.default.internalError(res);
-    }
-}));
-//Endpoint for fetching a specific playlist's information and details
-router.get("/number", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const postsCount = yield PostsService_1.default.getPostsCount();
-        res.send(postsCount);
+        const runTime = Date.now() - initialTime; // calculate getPosts function runtime
+        //insert the runtime data into the statistics document stored in the DB
+        yield StatisticsService_1.default.insertRuntimeResult(RuntimeFunctions_1.default.GET_POSTS_LIST, runTime);
+        res.send({ posts }); // send posts to user
     }
     catch (e) {
         console.log(e);
@@ -61,11 +61,12 @@ router.get("/number", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         expressErrors_1.default.internalError(res);
     }
 }));
-//Endpoint for fetching a specific playlist's information and details
-router.get("/statistics", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+//Endpoint for fetching the total posts count
+router.get("/number", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const postsStatistics = yield PostsService_1.default.getPostsStatistics();
-        res.send(postsStatistics);
+        //get posts count from the posts service class 
+        const postsCount = yield PostsService_1.default.getPostsCount();
+        res.send({ postsCount });
     }
     catch (e) {
         console.log(e);
