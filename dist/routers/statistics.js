@@ -17,11 +17,11 @@ const StatisticsService_1 = __importDefault(require("../service/StatisticsServic
 const Endpoints_1 = __importDefault(require("../types/controllers/Endpoints"));
 const expressErrors_1 = __importDefault(require("../utils/error/expressErrors"));
 const router = express_1.Router();
-//Endpoint for fetching a specific playlist's information and details
+//Endpoint for getting runtime statistics data as requested in the task
 router.get("/runtimes", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const postsStatistics = yield StatisticsService_1.default.getRuntimeStatistics();
-        res.send(postsStatistics);
+        const runtimeStatistics = yield StatisticsService_1.default.getRuntimeStatistics(); // call function from service class
+        res.send(runtimeStatistics); // send runtime statistics to the client
     }
     catch (e) {
         console.log(e);
@@ -29,11 +29,11 @@ router.get("/runtimes", (req, res) => __awaiter(void 0, void 0, void 0, function
         expressErrors_1.default.internalError(res);
     }
 }));
-//Endpoint for fetching a specific playlist's information and details
+//Endpoint for getting top post creators statistics data as requested in the task
 router.get("/topcreators", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const postsStatistics = yield StatisticsService_1.default.getPostsCreatorsStatistics();
-        res.send(postsStatistics);
+        const postsStatistics = yield StatisticsService_1.default.getPostsCreatorsStatistics(); // call function from service class
+        res.send(postsStatistics); // send runtime statistics to the client
     }
     catch (e) {
         console.log(e);

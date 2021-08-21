@@ -1,6 +1,4 @@
 import { Router, Response } from "express"
-import Auth from "../auth/Auth"
-import PostsService from "../service/PostsService"
 import StatisticsService from "../service/StatisticsService"
 import Endpoints from "../types/controllers/Endpoints"
 import ExtendedRequest from "../types/controllers/ExtendedRequest"
@@ -9,12 +7,12 @@ import errorHandlers from "../utils/error/expressErrors"
 const router = Router()
 
 
-//Endpoint for fetching a specific playlist's information and details
+//Endpoint for getting runtime statistics data as requested in the task
 router.get("/runtimes", async (req: ExtendedRequest, res: Response) => {
     try {
-        const postsStatistics = await StatisticsService.getRuntimeStatistics()
+        const runtimeStatistics = await StatisticsService.getRuntimeStatistics() // call function from service class
 
-        res.send(postsStatistics)
+        res.send(runtimeStatistics) // send runtime statistics to the client
     } catch (e) {
         console.log(e)
         // any error that is thrown and not being handled earlier in the code will be send as an internal error to the client
@@ -22,12 +20,12 @@ router.get("/runtimes", async (req: ExtendedRequest, res: Response) => {
     }
 })
 
-//Endpoint for fetching a specific playlist's information and details
+//Endpoint for getting top post creators statistics data as requested in the task
 router.get("/topcreators", async (req: ExtendedRequest, res: Response) => {
     try {
-        const postsStatistics = await StatisticsService.getPostsCreatorsStatistics()
+        const postsStatistics = await StatisticsService.getPostsCreatorsStatistics() // call function from service class
 
-        res.send(postsStatistics)
+        res.send(postsStatistics) // send runtime statistics to the client
     } catch (e) {
         console.log(e)
         // any error that is thrown and not being handled earlier in the code will be send as an internal error to the client

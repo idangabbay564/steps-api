@@ -1,4 +1,5 @@
 "use strict";
+//error code list - being used in the error handlement util function / object
 Object.defineProperty(exports, "__esModule", { value: true });
 var ErrorCodeList;
 (function (ErrorCodeList) {

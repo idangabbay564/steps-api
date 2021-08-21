@@ -19,6 +19,7 @@ class PostsService {
     static createPost(postObject) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                //create and save new post
                 const post = new this.model(postObject);
                 return yield post.save();
             }
@@ -31,6 +32,7 @@ class PostsService {
     static getPosts(limit, skip) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                // fetch posts from posts collection, using pagination, and sorted by creation date as requested (sort is supported by an index on the posts table to make it optimized)
                 const posts = yield this.model.find({}).skip(skip).limit(limit).sort({ createdAt: 1 });
                 return posts;
             }
@@ -40,10 +42,11 @@ class PostsService {
             }
         });
     }
-    //function handles fetching a distinct posts creators count
+    //function handles fetching a total posts count
     static getPostsCount() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                // count total posts from Posts collection
                 const postsStatistics = yield this.model.countDocuments({});
                 return postsStatistics;
             }

@@ -11,6 +11,7 @@ export default class PostsService {
     //function handles creating a new post under a specific user
     public static async createPost(postObject: { [key: string]: any }): Promise<ObjType> {
         try {
+            //create and save new post
             const post = new this.model(postObject)
             return await post.save()
         } catch (e) {
@@ -19,8 +20,9 @@ export default class PostsService {
     }
 
     //function handles getting posts from DB - integrated with basic pagination 
-    public static async getPosts(limit: number , skip: number ): Promise<any[]> {
+    public static async getPosts(limit: number, skip: number): Promise<any[]> {
         try {
+            // fetch posts from posts collection, using pagination, and sorted by creation date as requested (sort is supported by an index on the posts table to make it optimized)
             const posts = await this.model.find({}).skip(skip).limit(limit).sort({ createdAt: 1 })
             return posts
         } catch (e) {
@@ -29,9 +31,10 @@ export default class PostsService {
         }
     }
 
-    //function handles fetching a distinct posts creators count
+    //function handles fetching a total posts count
     public static async getPostsCount(): Promise<any[]> {
         try {
+            // count total posts from Posts collection
             const postsStatistics = await this.model.countDocuments({})
 
             return postsStatistics

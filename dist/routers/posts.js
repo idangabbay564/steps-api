@@ -29,9 +29,10 @@ router.post("/", Auth_1.default.authenticate(), (req, res) => __awaiter(void 0, 
         if (!postObject)
             throw ("must provide a post object");
         postObject.creator = req.userRef;
-        const initialTime = Date.now();
+        const initialTime = Date.now(); // store initial time before calling function
         const post = yield PostsService_1.default.createPost(postObject);
-        const runTime = Date.now() - initialTime;
+        const runTime = Date.now() - initialTime; // calculate create post function runtime
+        //insert the runtime data into the statistics document stored in the DB
         yield StatisticsService_1.default.insertRuntimeResult(RuntimeFunctions_1.default.CREATE_POST, runTime);
         res.send({ post });
     }
@@ -46,9 +47,10 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let limit = req.query.limit || 10;
         let skip = req.query.skip || 0;
+        //some parsings on the skip and limit attributes - will probably be handlent in a seperate layer / middleware in a real app
         skip = parseInt(skip.toString());
         limit = parseInt(limit.toString());
-        const initialTime = Date.now();
+        const initialTime = Date.now(); // store initial time before calling function
         const posts = yield PostsService_1.default.getPosts(limit, skip);
         const runTime = Date.now() - initialTime; // calculate getPosts function runtime
         //insert the runtime data into the statistics document stored in the DB

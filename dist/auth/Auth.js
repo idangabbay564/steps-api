@@ -13,7 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const expressErrors_1 = __importDefault(require("../utils/error/expressErrors"));
+//stimulate authentication & authorization util class
 class Auth {
+    //stimulation of authentication middleware function just to support the users feature
+    //the function doesnt actually handles authentication but only simulates an authentication - real application will include proper handlement in that phase
     static authenticate() {
         return (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             var _a;

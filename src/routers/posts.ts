@@ -20,12 +20,13 @@ router.post("/", Auth.authenticate(), async (req: ExtendedRequest, res: Response
 
         postObject.creator = req.userRef
 
-        const initialTime = Date.now()
+        const initialTime = Date.now() // store initial time before calling function
 
         const post = await PostsService.createPost(postObject)
 
-        const runTime = Date.now() - initialTime
+        const runTime = Date.now() - initialTime // calculate create post function runtime
 
+        //insert the runtime data into the statistics document stored in the DB
         await StatisticsService.insertRuntimeResult(RuntimeFunctions.CREATE_POST, runTime)
 
         res.send({ post })
@@ -43,12 +44,13 @@ router.get("/", async (req: ExtendedRequest, res: Response) => {
         let limit = req.query.limit || 10
         let skip = req.query.skip || 0
 
+        //some parsings on the skip and limit attributes - will probably be handlent in a seperate layer / middleware in a real app
         skip = parseInt(skip.toString())
         limit = parseInt(limit.toString())
 
-        const initialTime = Date.now()
+        const initialTime = Date.now() // store initial time before calling function
 
-        const posts = await PostsService.getPosts(limit, skip) 
+        const posts = await PostsService.getPosts(limit, skip)
 
         const runTime = Date.now() - initialTime // calculate getPosts function runtime
 
@@ -69,7 +71,7 @@ router.get("/number", async (req: ExtendedRequest, res: Response) => {
         //get posts count from the posts service class 
         const postsCount = await PostsService.getPostsCount()
 
-        res.send({postsCount})
+        res.send({ postsCount })
     } catch (e) {
         console.log(e)
         // any error that is thrown and not being handled earlier in the code will be send as an internal error to the client

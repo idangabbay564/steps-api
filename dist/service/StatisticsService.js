@@ -15,14 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Posts_1 = __importDefault(require("../models/Posts"));
 const Staticstics_1 = __importDefault(require("../models/Staticstics"));
 class StatisticsService {
+    //funciton inserts new runtime data into the already stores runtime data
     static insertRuntimeResult(func, result) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryObj = { function: func };
             yield this.model.findOneAndUpdate(queryObj, { $push: { results: result } });
         });
     }
+    //function fetched and calculates runtime statistics data
     static getRuntimeStatistics() {
         return __awaiter(this, void 0, void 0, function* () {
+            //using aggregation pipeline to implement the calculation
             const postsStatistics = yield this.model.aggregate([
                 {
                     $project: {
@@ -40,6 +43,7 @@ class StatisticsService {
     static getPostsCreatorsStatistics() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                //using multiSteps aggregation pipeline to arrange desired data
                 const postsStatistics = yield Posts_1.default.aggregate([
                     {
                         $group: {

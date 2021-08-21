@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const RuntimeFunctions_1 = __importDefault(require("../types/models/RuntimeFunctions"));
+//definition of statistics schema for DB
 const statisticsSchema = new mongoose_1.Schema({
     function: {
         enum: [
@@ -16,5 +17,6 @@ const statisticsSchema = new mongoose_1.Schema({
     },
     results: [Number]
 });
+//create and export actual statistics model
 const Statistics = mongoose_1.model("statistics", statisticsSchema);
 exports.default = Statistics;
